@@ -1,0 +1,10 @@
+cd "C:\Users\sanskriti narain\Downloads\files"
+@"
+flask
+gunicorn
+numpy
+joblib
+scikit-learn
+xgboost==3.4.1
+rdkit
+"@ | Set-Content -Encoding ascii requirements.txt

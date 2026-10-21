@@ -1,0 +1,106 @@
+--- GET /health ---
+Request:  {}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "status": "ok"
+}
+
+--- POST /predict (CCO) ---
+Request:  {"smiles": "CCO"}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "predicted_label": "Non-toxic",
+  "smiles": "CCO",
+  "threshold": 0.5,
+  "toxicity_risk_score": 0.45
+}
+
+--- POST /predict (c1ccccc1) ---
+Request:  {"smiles": "c1ccccc1"}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "predicted_label": "Non-toxic",
+  "smiles": "c1ccccc1",
+  "threshold": 0.5,
+  "toxicity_risk_score": 0.4
+}
+
+--- POST /predict (CC(=O)Oc1ccccc1C(=O)O) ---
+Request:  {"smiles": "CC(=O)Oc1ccccc1C(=O)O"}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "predicted_label": "Non-toxic",
+  "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+  "threshold": 0.5,
+  "toxicity_risk_score": 0.45
+}
+
+--- POST /predict (CC(C)Cc1ccc(cc1)C(C)C(=O)O) ---
+Request:  {"smiles": "CC(C)Cc1ccc(cc1)C(C)C(=O)O"}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "predicted_label": "Non-toxic",
+  "smiles": "CC(C)Cc1ccc(cc1)C(C)C(=O)O",
+  "threshold": 0.5,
+  "toxicity_risk_score": 0.4
+}
+
+--- POST /predict (C1=CC=C2C(=C1)C=CC(=O)O2) ---
+Request:  {"smiles": "C1=CC=C2C(=C1)C=CC(=O)O2"}
+Status:   200
+Response: {
+  "model": "Random Forest",
+  "predicted_label": "Non-toxic",
+  "smiles": "C1=CC=C2C(=C1)C=CC(=O)O2",
+  "threshold": 0.5,
+  "toxicity_risk_score": 0.4
+}
+
+--- POST /predict (invalid_smiles_xyz) ---
+Request:  {"smiles": "invalid_smiles_xyz"}
+Status:   400
+Response: {
+  "error": "Could not parse SMILES: 'invalid_smiles_xyz'"
+}
+
+--- POST /predict/batch ---
+Request:  {"smiles": ["CCO", "c1ccccc1", "CC(=O)Oc1ccccc1C(=O)O", "CC(C)Cc1ccc(cc1)C(C)C(=O)O"]}
+Status:   200
+Response: {
+  "results": [
+    {
+      "model": "Random Forest",
+      "predicted_label": "Non-toxic",
+      "smiles": "CCO",
+      "threshold": 0.5,
+      "toxicity_risk_score": 0.45
+    },
+    {
+      "model": "Random Forest",
+      "predicted_label": "Non-toxic",
+      "smiles": "c1ccccc1",
+      "threshold": 0.5,
+      "toxicity_risk_score": 0.4
+    },
+    {
+      "model": "Random Forest",
+      "predicted_label": "Non-toxic",
+      "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+      "threshold": 0.5,
+      "toxicity_risk_score": 0.45
+    },
+    {
+      "model": "Random Forest",
+      "predicted_label": "Non-toxic",
+      "smiles": "CC(C)Cc1ccc(cc1)C(C)C(=O)O",
+      "threshold": 0.5,
+      "toxicity_risk_score": 0.4
+    }
+  ]
+}
+

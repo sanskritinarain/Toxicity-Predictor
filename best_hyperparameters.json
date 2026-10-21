@@ -1,0 +1,28 @@
+{
+  "random_forest": {
+    "max_depth": null,
+    "max_features": "sqrt",
+    "min_samples_leaf": 3
+  },
+  "xgboost": {
+    "n_estimators": 350,
+    "max_depth": 6,
+    "learning_rate": 0.011479304589396598,
+    "subsample": 0.6532258321837615,
+    "colsample_bytree": 0.7251242875392727,
+    "min_child_weight": 1,
+    "reg_lambda": 0.24142782406992694,
+    "gamma": 2.572458484171517,
+    "scale_pos_weight": 1.670743144359479
+  },
+  "neural_net": {
+    "n_layers": 1,
+    "width": 1024,
+    "dropout": 0.13990719545328706,
+    "lr": 0.00010456354892580082,
+    "weight_decay": 0.00013971879923725222,
+    "batch_size": 256,
+    "epochs": 12,
+    "pos_weight": 9.118001206489337
+  }
+}

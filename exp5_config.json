@@ -1,0 +1,6 @@
+{
+  "task": "NR-AR",
+  "radius": 2,
+  "n_bits": 2048,
+  "seed": 42
+}

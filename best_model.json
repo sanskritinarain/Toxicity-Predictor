@@ -1,0 +1,14 @@
+{
+  "best_model": "XGBoost",
+  "artefact": "xgb_best.json",
+  "selected_by": "cv_roc_auc_mean",
+  "cv_roc_auc_mean": 0.8164861743501157,
+  "cv_roc_auc_std": 0.018426880838814563,
+  "cv_pr_auc_mean": 0.5506717201811017,
+  "val_roc_auc": 0.7646629705281587,
+  "val_pr_auc": 0.4526693126935948,
+  "threshold": 0.5609042048454285,
+  "val_f1": 0.5588235294117647,
+  "val_mcc": 0.5863924980227492,
+  "val_bal_acc": 0.7050835799741548
+}

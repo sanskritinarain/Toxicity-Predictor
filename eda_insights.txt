@@ -1,0 +1,5 @@
+1. Severe imbalance: 4.25% toxic in train (ratio ~1:23) -> use ROC-AUC / PR-AUC, not accuracy; handle with class weights (and SMOTE inside CV folds only).
+2. Sparse features: mean 29.5 of 2048 bits set per molecule (1.44% density).
+3. 0.0% of bits are never set and 73.1% are set in <1% of train molecules -> tree models and regularised NNs are appropriate; heavy feature selection is optional.
+4. 200 duplicate fingerprints inside train and 82 validation molecules with a fingerprint identical to a train molecule -> a random split can be slightly optimistic (a scaffold split is a good robustness check).
+5. Features/samples = 2048/5080 -> high-dimensional, small-n regime: tune regularisation (depth, min_samples_leaf, dropout, weight decay).

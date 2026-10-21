@@ -1,0 +1,126 @@
+{
+    "experiment": "Experiment 6 \u2014 Model Evaluation",
+    "dataset": {
+        "representation": "Morgan/ECFP4",
+        "radius": 2,
+        "fingerprint_bits": 2048,
+        "test_samples": 1089
+    },
+    "models_evaluated": [
+        "Random Forest",
+        "XGBoost",
+        "Feed-Forward NN"
+    ],
+    "validation_results": [
+        {
+            "Model": "Random Forest",
+            "Split": "Validation",
+            "Accuracy": 0.9660238751147842,
+            "Macro Precision": 0.814850357839948,
+            "Macro Recall": 0.7017278752761682,
+            "Macro F1": 0.7445363766048503,
+            "ROC-AUC": 0.7547625995247822,
+            "PR-AUC": 0.4513260853778454
+        },
+        {
+            "Model": "XGBoost",
+            "Split": "Validation",
+            "Accuracy": 0.9715335169880625,
+            "Macro Precision": 0.90037931315768,
+            "Macro Recall": 0.7046041935887282,
+            "Macro F1": 0.768012864122704,
+            "ROC-AUC": 0.7646629705281587,
+            "PR-AUC": 0.4526693126935948
+        },
+        {
+            "Model": "Feed-Forward NN",
+            "Split": "Validation",
+            "Accuracy": 0.967860422405877,
+            "Macro Precision": 0.8391399874450722,
+            "Macro Recall": 0.7026866480470215,
+            "Macro F1": 0.7519604334103407,
+            "ROC-AUC": 0.6324044353662095,
+            "PR-AUC": 0.420020333015066
+        }
+    ],
+    "test_results": [
+        {
+            "Model": "Random Forest",
+            "Split": "Test",
+            "Accuracy": 0.9696969696969697,
+            "Macro Precision": 0.8502765126870526,
+            "Macro Recall": 0.7244257784818041,
+            "Macro F1": 0.7721540656205421,
+            "ROC-AUC": 0.7714056442536162,
+            "PR-AUC": 0.5068156775705909
+        },
+        {
+            "Model": "XGBoost",
+            "Split": "Test",
+            "Accuracy": 0.9715335169880625,
+            "Macro Precision": 0.90037931315768,
+            "Macro Recall": 0.7046041935887282,
+            "Macro F1": 0.768012864122704,
+            "ROC-AUC": 0.7929884530409771,
+            "PR-AUC": 0.521032846711792
+        },
+        {
+            "Model": "Feed-Forward NN",
+            "Split": "Test",
+            "Accuracy": 0.9669421487603306,
+            "Macro Precision": 0.8162990775780511,
+            "Macro Recall": 0.7229876193255241,
+            "Macro F1": 0.7606593406593407,
+            "ROC-AUC": 0.7376610112968444,
+            "PR-AUC": 0.491527523170855
+        }
+    ],
+    "error_analysis": [
+        {
+            "Model": "Random Forest",
+            "Total Errors": 33,
+            "False Positives": 8,
+            "False Negatives": 25,
+            "Error Rate": 0.030303030303030304,
+            "Mean Error Confidence": 0.7989351844358171
+        },
+        {
+            "Model": "XGBoost",
+            "Total Errors": 31,
+            "False Positives": 4,
+            "False Negatives": 27,
+            "Error Rate": 0.028466483011937556,
+            "Mean Error Confidence": 0.9011591672897339
+        },
+        {
+            "Model": "Feed-Forward NN",
+            "Total Errors": 36,
+            "False Positives": 11,
+            "False Negatives": 25,
+            "Error Rate": 0.03305785123966942,
+            "Mean Error Confidence": 0.802455484867096
+        }
+    ],
+    "final_model": "XGBoost",
+    "selection_method": "Highest validation Macro-F1, with PR-AUC as secondary criterion",
+    "outputs": [
+        "validation_metrics.csv",
+        "test_metrics.csv",
+        "final_metrics_table.csv",
+        "classification_reports.json",
+        "random_forest_confusion_matrix.png",
+        "xgboost_confusion_matrix.png",
+        "feed_forward_nn_confusion_matrix.png",
+        "roc_curves_test_set.png",
+        "precision_recall_curves_test_set.png",
+        "model_comparison.png",
+        "error_analysis_summary.csv",
+        "random_forest_error_cases.csv",
+        "xgboost_error_cases.csv",
+        "feed_forward_nn_error_cases.csv",
+        "final_model.pkl",
+        "final_model_selection.json",
+        "final_model_confusion_matrix.png",
+        "final_model_error_cases.csv"
+    ]
+}

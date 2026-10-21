@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ToxScan | Molecule Toxicity Predictor</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: "Segoe UI", system-ui, sans-serif; color: #1f2937;
+    background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0ea5e9 100%);
+    padding: 24px;
+  }
+  .card {
+    width: 100%; max-width: 620px; background: #fff; border-radius: 20px;
+    padding: 36px; box-shadow: 0 25px 60px rgba(0,0,0,.35);
+  }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .5px;
+    color: #4338ca; background: #eef2ff; padding: 4px 10px; border-radius: 999px; }
+  h1 { margin: 12px 0 4px; font-size: 28px; }
+  .sub { margin: 0 0 24px; color: #6b7280; font-size: 14px; }
+  label { font-size: 13px; font-weight: 600; color: #374151; }
+  .row { display: flex; gap: 10px; margin-top: 8px; }
+  input {
+    flex: 1; padding: 14px 16px; font-size: 16px; font-family: Consolas, monospace;
+    border: 2px solid #e5e7eb; border-radius: 12px; outline: none; transition: border-color .2s;
+  }
+  input:focus { border-color: #4338ca; }
+  button.go {
+    padding: 0 26px; font-size: 16px; font-weight: 600; color: #fff; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #4338ca, #0ea5e9); cursor: pointer; transition: transform .1s, opacity .2s;
+  }
+  button.go:hover { opacity: .92; }
+  button.go:active { transform: scale(.97); }
+  button.go:disabled { opacity: .6; cursor: wait; }
+  .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chips span { font-size: 12px; color: #9ca3af; }
+  .chip {
+    font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid #e5e7eb;
+    background: #f9fafb; cursor: pointer; transition: all .15s;
+  }
+  .chip:hover { border-color: #4338ca; color: #4338ca; background: #eef2ff; }
+  #out { margin-top: 28px; display: none; border-radius: 14px; padding: 22px; animation: fade .3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .safe { background: #ecfdf5; border: 1px solid #a7f3d0; }
+  .tox  { background: #fef2f2; border: 1px solid #fecaca; }
+  .err  { background: #fffbeb; border: 1px solid #fde68a; }
+  .verdict { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .safe .verdict { color: #047857; } .tox .verdict { color: #b91c1c; } .err .verdict { color: #b45309; }
+  .smi { font-family: Consolas, monospace; font-size: 13px; color: #6b7280; word-break: break-all; margin-bottom: 16px; }
+  .gauge { position: relative; height: 12px; border-radius: 999px;
+    background: linear-gradient(90deg, #34d399, #fbbf24, #f87171); margin: 18px 0 8px; }
+  .marker { position: absolute; top: -5px; width: 4px; height: 22px; background: #111827; border-radius: 2px;
+    transform: translateX(-50%); transition: left .6s cubic-bezier(.2,.8,.2,1); }
+  .thr { position: absolute; top: -3px; width: 2px; height: 18px; background: rgba(0,0,0,.35);
+    transform: translateX(-50%); }
+  .scale { display: flex; justify-content: space-between; font-size: 11px; color: #6b7280; }
+  .meta { display: flex; gap: 24px; margin-top: 16px; font-size: 13px; color: #4b5563; }
+  .meta b { display: block; font-size: 18px; color: #111827; }
+  .foot { margin-top: 24px; font-size: 11px; color: #9ca3af; text-align: center; }
+</style>
+</head>
+<body>
+<div class="card">
+  <span class="badge">TOX21 &middot; XGBOOST &middot; MORGAN FINGERPRINTS</span>
+  <h1>Molecule Toxicity Predictor</h1>
+  <p class="sub">Paste a SMILES string to estimate its toxicity risk.</p>
+
+  <label for="smiles">SMILES</label>
+  <div class="row">
+    <input id="smiles" placeholder="e.g. CC(=O)Oc1ccccc1C(=O)O" autocomplete="off" spellcheck="false">
+    <button class="go" id="btn" onclick="predict()">Predict</button>
+  </div>
+
+  <div class="chips">
+    <span>Try:</span>
+    <button class="chip" onclick="setS('CCO')">Ethanol</button>
+    <button class="chip" onclick="setS('CC(=O)Oc1ccccc1C(=O)O')">Aspirin</button>
+    <button class="chip" onclick="setS('c1ccccc1')">Benzene</button>
+    <button class="chip" onclick="setS('CN1C=NC2=C1C(=O)N(C(=O)N2C)C')">Caffeine</button>
+    <button class="chip" onclick="setS('CC(C)(c1ccc(O)cc1)c1ccc(O)cc1')">Bisphenol A</button>
+  </div>
+
+  <div id="out"></div>
+  <div class="foot">Research demo only. Not for medical or regulatory decisions.</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function setS(s) { $("smiles").value = s; predict(); }
+$("smiles").addEventListener("keydown", e => { if (e.key === "Enter") predict(); });
+
+async function predict() {
+  const smiles = $("smiles").value.trim();
+  const out = $("out"), btn = $("btn");
+  if (!smiles) { $("smiles").focus(); return; }
+  btn.disabled = true; btn.textContent = "Predicting...";
+  try {
+    const r = await fetch("/predict", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({smiles})
+    });
+    const d = await r.json();
+    out.style.display = "block";
+    if (d.error) {
+      out.className = "err";
+      out.innerHTML = "<p class='verdict'>Couldn't read that molecule</p><div class='smi'>" + esc(d.error) + "</div>";
+      return;
+    }
+    const toxic = d.predicted_label === "Toxic";
+    const score = Number(d.toxicity_risk_score), thr = Number(d.threshold);
+    out.className = toxic ? "tox" : "safe";
+    out.innerHTML =
+      "<p class='verdict'>" + (toxic ? "&#9888; " : "&#10004; ") + esc(d.predicted_label) + "</p>" +
+      "<div class='smi'>" + esc(d.smiles) + "</div>" +
+      "<div class='gauge'><div class='thr' style='left:" + (thr*100) + "%'></div>" +
+      "<div class='marker' id='mk' style='left:0%'></div></div>" +
+      "<div class='scale'><span>0 low risk</span><span>threshold " + thr + "</span><span>1 high risk</span></div>" +
+      "<div class='meta'><div>Risk score<b>" + score.toFixed(4) + "</b></div><div>Model<b>" + esc(d.model) + "</b></div></div>";
+    requestAnimationFrame(() => requestAnimationFrame(() => { $("mk").style.left = Math.min(score,1)*100 + "%"; }));
+  } catch (e) {
+    out.style.display = "block"; out.className = "err";
+    out.innerHTML = "<p class='verdict'>Request failed</p><div class='smi'>" + esc(e) + "</div>";
+  } finally {
+    btn.disabled = false; btn.textContent = "Predict";
+  }
+}
+</script>
+</body>
+</html>
